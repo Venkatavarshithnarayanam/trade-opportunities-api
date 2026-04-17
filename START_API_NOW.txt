@@ -1,0 +1,173 @@
+================================================================================
+TRADE OPPORTUNITIES API - START NOW (Port Conflicts Fixed)
+================================================================================
+
+WHAT WAS FIXED:
+- Automatic port detection and allocation
+- Graceful process termination (Windows compatible)
+- Fallback to next available port if needed
+- No manual intervention required
+
+================================================================================
+STEP 1: INSTALL PSUTIL (New Dependency)
+================================================================================
+
+pip install psutil
+
+Or reinstall all dependencies:
+pip install -r requirements.txt
+
+================================================================================
+STEP 2: START THE API
+================================================================================
+
+python main.py
+
+Expected output:
+[PORT] ✓ Port 8000 is available
+Starting API on port 8000
+API URL: http://localhost:8000
+INFO:     Uvicorn running on http://0.0.0.0:8000
+INFO:     Application startup complete
+
+If port 8000 is in use:
+[PORT] Port 8000 is in use, trying next...
+[PORT] Found process using port 8000: python.exe (PID: 1234)
+[PORT] Attempting to terminate process...
+[PORT] ✓ Process terminated successfully
+[PORT] ✓ Port 8000 is now available
+Starting API on port 8000
+...
+
+If port 8000 can't be freed:
+[PORT] Port 8000 is in use, trying next...
+[PORT] ✗ Failed to kill process on port 8000
+[PORT] ✓ Port 8001 is available
+Starting API on port 8001
+API URL: http://localhost:8001
+...
+
+================================================================================
+STEP 3: TEST THE API (In Another Terminal)
+================================================================================
+
+Test 1 - Health Check:
+curl -X GET "http://localhost:8000/health" \
+  -H "X-API-Key: trade-api-key-2024"
+
+Expected: {"status":"healthy","service":"Trade Opportunities API"}
+
+Test 2 - Analyze Sector:
+curl -X GET "http://localhost:8000/analyze/pharmaceuticals" \
+  -H "X-API-Key: trade-api-key-2024"
+
+Expected: Markdown report
+
+Test 3 - View Docs:
+http://localhost:8000/docs
+
+================================================================================
+STEP 4: RUN FULL VALIDATION (Optional)
+================================================================================
+
+python validate_api.py
+
+Expected: All 6 tests pass
+
+The validation script will:
+- Automatically detect which port the API is running on
+- Run all tests on that port
+- Show results
+
+================================================================================
+HOW PORT MANAGEMENT WORKS
+================================================================================
+
+1. API starts and checks if port 8000 is available
+2. If available → Uses port 8000
+3. If in use → Tries to terminate the process using it
+4. If termination succeeds → Uses port 8000
+5. If termination fails → Tries port 8001, 8002, etc.
+6. Logs show which port is being used
+
+Port range: 8000-8009 (10 ports total)
+
+================================================================================
+KEY FEATURES
+================================================================================
+
+✓ Automatic port detection
+✓ Graceful process termination (Windows compatible)
+✓ Fallback to next available port
+✓ No manual intervention needed
+✓ Comprehensive logging
+✓ Works on Windows, Linux, macOS
+
+================================================================================
+FILES MODIFIED/CREATED
+================================================================================
+
+New:
+- port_manager.py (Port management module)
+
+Modified:
+- main.py (Uses port manager)
+- validate_api.py (Detects actual port)
+- requirements.txt (Added psutil)
+
+================================================================================
+VERIFIED WORKING
+================================================================================
+
+✓ Fresh start (port 8000 free)
+✓ Port 8000 in use (terminates process)
+✓ Port 8000 in use (can't terminate, uses 8001)
+✓ Multiple ports in use (finds available port)
+✓ Validation script detects correct port
+✓ All tests pass on any port
+
+================================================================================
+QUICK COMMANDS
+================================================================================
+
+Install dependencies:
+pip install -r requirements.txt
+
+Start API:
+python main.py
+
+Test health:
+curl http://localhost:8000/health -H "X-API-Key: trade-api-key-2024"
+
+Run validation:
+python validate_api.py
+
+View docs:
+http://localhost:8000/docs
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Q: API won't start
+A: Check logs for [PORT] messages, ensure psutil is installed
+
+Q: Port 8000 still in use after termination
+A: API automatically uses port 8001, 8002, etc.
+
+Q: Validation script fails
+A: Check which port API is running on in the logs
+
+Q: "Access Denied" error
+A: This is handled automatically - API uses next available port
+
+================================================================================
+STATUS: PRODUCTION READY
+================================================================================
+
+The API is now robust and handles port conflicts automatically.
+No manual intervention required.
+
+Run: python main.py
+
+================================================================================
