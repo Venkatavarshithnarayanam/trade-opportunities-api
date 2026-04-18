@@ -29,6 +29,8 @@ curl -H "X-API-Key: trade-api-key-2024" \
   http://localhost:8001/analyze/technology
 ```
 
+Valid sectors: `pharmaceuticals`, `technology`, `agriculture`, `healthcare`, `finance`, `energy`
+
 **Interactive Docs**
 - Swagger UI: `http://localhost:8001/docs`
 - ReDoc: `http://localhost:8001/redoc`

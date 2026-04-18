@@ -191,6 +191,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Valid sectors for analysis
+VALID_SECTORS = ["pharmaceuticals", "technology", "agriculture", "healthcare", "finance", "energy"]
+
 
 class AnalysisRequest(BaseModel):
     """Request model for analysis endpoint"""
@@ -220,7 +223,7 @@ async def analyze_sector(
     Analyze market opportunities for a given sector.
     
     Args:
-        sector: The sector to analyze (e.g., pharmaceuticals, technology, agriculture)
+        sector: The sector to analyze (pharmaceuticals, technology, agriculture, healthcare, finance, energy)
         x_api_key: API key for authentication (required header)
         client_id: Optional client identifier for session tracking
     
@@ -243,15 +246,17 @@ async def analyze_sector(
         
         logger.info(f"[AUTH] ✓ API key validated for client: {client_id}")
         
-        # Validate sector input
-        if not sector or not sector.replace(" ", "").isalpha():
+        # Normalize and validate sector
+        sector_normalized = sector.strip().lower()
+        
+        if sector_normalized not in VALID_SECTORS:
             logger.warning(f"[VALIDATION] ✗ Invalid sector input: {sector}")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Sector must contain only alphabetic characters"
+                detail=f"Invalid sector. Please use a valid sector like {', '.join(VALID_SECTORS)}"
             )
         
-        sector = sector.strip().lower()
+        sector = sector_normalized
         logger.info(f"[VALIDATION] ✓ Sector input validated: {sector}")
         
         # Check rate limit
